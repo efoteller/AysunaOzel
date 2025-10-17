@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aysun, Benimle Çıkar mısın?</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Kalp Giriş Animasyonu */
+        #heartIntro {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+        }
+
+        .heart-gif-container {
+            width: 300px;
+            height: 300px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(255, 42, 109, 0.7);
+            border: 3px solid rgba(255, 42, 109, 0.5);
+        }
+
+        .heart-gif-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .intro-text {
+            font-size: 2rem;
+            color: #fff;
+            text-shadow: 0 0 20px #ff2a6d;
+            opacity: 0;
+            margin-top: 30px;
+            animation: fadeInText 2s ease-in-out 1s forwards;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        @keyframes fadeInText {
+            to { opacity: 1; }
+        }
+
+        /* Ana İçerik */
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(20, 0, 5, 0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 50px rgba(255, 0, 60, 0.4);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 0, 60, 0.3);
+            margin: 50px auto;
+            display: none;
+        }
+
+        .glow-effect {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 0, 60, 0.15) 0%, rgba(0,0,0,0) 70%);
+            z-index: 0;
+            animation: glowMove 15s infinite linear;
+        }
+
+        @keyframes glowMove {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(10%, 10%); }
+            50% { transform: translate(5%, 15%); }
+            75% { transform: translate(15%, 5%); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .hearts-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: #ff2a6d;
+            opacity: 0;
+            animation: float 6s linear infinite;
+            filter: drop-shadow(0 0 10px #ff2a6d);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .header {
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 25px #ff2a6d, 0 0 15px #ff2a6d;
+            background: linear-gradient(45deg, #ff2a6d, #ff6b9d, #ff2a6d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(255, 42, 109, 0.7);
+        }
+
+        .photo-section {
+            margin: 30px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .photo-frame {
+            width: 280px;
+            height: 200px;
+            margin: 0 auto;
+            border-radius: 20px;
+            border: 3px solid rgba(255, 42, 109, 0.6);
+            padding: 8px;
+            background: rgba(255, 42, 109, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 42, 109, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.5s ease;
+            overflow: hidden;
+        }
+
+        .photo-frame:hover {
+            transform: scale(1.05);
+        }
+
+        .gif-container {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        .gif-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .message {
+            background: rgba(255, 42, 109, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 25px 0;
+            position: relative;
+            z-index: 1;
+            text-align: left;
+            line-height: 1.6;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 42, 109, 0.3);
+            border: 1px solid rgba(255, 42, 109, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .message p {
+            margin-bottom: 15px;
+            font-size: 1.15rem;
+            color: #fff;
+        }
+
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+
+        .question {
+            font-size: 2rem;
+            margin: 30px 0;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 20px #ff2a6d;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); text-shadow: 0 0 20px #ff2a6d; }
+            50% { transform: scale(1.05); text-shadow: 0 0 30px #ff2a6d; }
+            100% { transform: scale(1); text-shadow: 0 0 20px #ff2a6d; }
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 30px;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 18px 45px;
+            font-size: 1.4rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            min-width: 160px;
+            position: relative;
+            overflow: hidden;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        #yesBtn {
+            background: linear-gradient(45deg, #ff2a6d, #ff6b9d);
+            color: white;
+            box-shadow: 0 8px 25px rgba(255, 42, 109, 0.6), 0 0 20px rgba(255, 42, 109, 0.7);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #noBtn {
+            background: linear-gradient(45deg, #8b0000, #b22222);
+            color: white;
+            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.6), 0 0 20px rgba(178, 34, 34, 0.5);
+            position: relative;
+        }
+
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #yesBtn:hover {
+            box-shadow: 0 12px 35px rgba(255, 42, 109, 0.8), 0 0 25px rgba(255, 42, 109, 0.9);
+        }
+
+        #noBtn:hover {
+            box-shadow: 0 12px 35px rgba(139, 0, 0, 0.8), 0 0 25px rgba(178, 34, 34, 0.7);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .success-message {
+            background: rgba(255, 42, 109, 0.15);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 1s ease;
+            border: 1px solid rgba(255, 42, 109, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 42, 109, 0.6);
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .bunny-gif {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(255, 42, 109, 0.6);
+            box-shadow: 0 0 20px rgba(255, 42, 109, 0.7);
+        }
+
+        .bunny-gif img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .success-title {
+            font-size: 2.8rem;
+            color: #ff2a6d;
+            text-shadow: 0 0 25px #ff2a6d;
+            animation: pulse 2s infinite;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #ff2a6d;
+            opacity: 0;
+            filter: drop-shadow(0 0 8px #ff2a6d);
+        }
+
+        .signature {
+            margin-top: 30px;
+            font-size: 1.4rem;
+            font-style: italic;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 42, 109, 0.7);
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 1rem;
+            opacity: 0.7;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(255, 42, 109, 0.5);
+        }
+
+        /* Mobil uyumluluk */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.4rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .photo-frame {
+                width: 240px;
+                height: 170px;
+            }
+            
+            .message {
+                padding: 25px;
+            }
+            
+            .message p {
+                font-size: 1.05rem;
+            }
+            
+            .question {
+                font-size: 1.7rem;
+            }
+            
+            button {
+                padding: 16px 35px;
+                font-size: 1.2rem;
+                min-width: 140px;
+            }
+            
+            .buttons {
+                gap: 20px;
+            }
+            
+            .success-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .bunny-gif {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .success-title {
+                font-size: 2.2rem;
+            }
+            
+            .container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+            
+            .heart-gif-container {
+                width: 250px;
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 15px;
+                margin: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .photo-frame {
+                width: 220px;
+                height: 160px;
+            }
+            
+            button {
+                padding: 14px 30px;
+                font-size: 1.1rem;
+                min-width: 130px;
+            }
+            
+            .success-title {
+                font-size: 1.8rem;
+            }
+            
+            .bunny-gif {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .heart-gif-container {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .intro-text {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .heart-gif-container {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .intro-text {
+                font-size: 1.3rem;
+                margin-top: 20px;
+            }
+            
+            .container {
+                margin: 10px;
+                padding: 20px 15px;
+            }
+        }
+
+        /* Mobil kaydırma düzeltmeleri */
+        @media (max-height: 700px) {
+            .container {
+                margin: 20px auto;
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .container {
+                margin: 15px auto;
+                padding: 25px 15px;
+            }
+            
+            .header {
+                margin-bottom: 20px;
+            }
+            
+            .photo-section {
+                margin: 20px 0;
+            }
+            
+            .message {
+                margin: 20px 0;
+                padding: 20px;
+            }
+            
+            .buttons {
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Kalp Giriş Animasyonu -->
+    <div id="heartIntro">
+        <div class="heart-gif-container">
+            <img src="https://c.tenor.com/Kzc2aRfMUA4AAAAC/tenor.gif" alt="Dönen Kalp">
+        </div>
+        <div class="intro-text">Aysun için...</div>
+    </div>
+
+    <!-- Ana İçerik -->
+    <div class="container" id="mainContent">
+        <div class="glow-effect"></div>
+        <div class="hearts-container" id="heartsContainer"></div>
+        
+        <div class="header">
+            <h1>Aysun</h1>
+            <p class="subtitle">Senin için özel bir sorum var...</p>
+        </div>
+        
+        <div class="photo-section">
+            <div class="photo-frame">
+                <div class="gif-container">
+                    <img src="https://media.tenor.com/5XOehZUJ1MAAAAAi/cute-cat-couple.gif" alt="Sevimli Kedi Çifti">
+                </div>
+            </div>
+        </div>
+        
+        <div class="message">
+            <p>Merhaba Aysun,</p>
+            <p>Seninle tanıştığımız andan beri hayatım daha anlamlı hale geldi. Her mesajlaşmamız, her konuşmamız bana inanılmaz mutluluk veriyor.</p>
+            <p>Seninle sadece sanalda değil, gerçek hayatta da vakit geçirmek, seni daha iyi tanımak, <span class="highlight">beraber güzel anılar biriktirmek</span> istiyorum.</p>
+            <p>Senin gülüşünü gerçek hayatta görmek, sesini canlı duymak en büyük hayalim.</p>
+        </div>
+        
+        <div class="question">Benimle çıkar mısın?</div>
+        
+        <div class="buttons">
+            <button id="yesBtn">EVET! 💖</button>
+            <button id="noBtn">Hayır</button>
+        </div>
+        
+        <div class="success-message hidden" id="successMessage">
+            <div class="success-header">
+                <div class="bunny-gif">
+                    <img src="https://media.tenor.com/kegMMjNnKkkAAAAi/bunny-cute.gif" alt="Sevimli Tavşan">
+                </div>
+                <h2 class="success-title">Harikaa 💕</h2>
+            </div>
+            <p>Verdiğin cevap beni çok mutlu etti Aysunum</p>
+            <p>Seninle ilk buluşmamızı iple çekiyorum. Birlikte güzel vakit geçireceğimize eminimm</p>
+            <p>Cevabını bide bana yazarak söylee</p>
+            <div class="signature">Seni seven,<br>Efkan</div>
+        </div>
+        
+        <div class="footer">
+            <p>Sadece senin için hazırlandı Aysun ❤️</p>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebration"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const heartIntro = document.getElementById('heartIntro');
+            const mainContent = document.getElementById('mainContent');
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+            const successMessage = document.getElementById('successMessage');
+            const heartsContainer = document.getElementById('heartsContainer');
+            const celebration = document.getElementById('celebration');
+            
+            let yesSize = 1;
+            let noClickCount = 0;
+            
+            // Giriş animasyonu - 6 saniye sonra ana içeriği göster
+            setTimeout(() => {
+                heartIntro.style.opacity = '0';
+                heartIntro.style.transition = 'opacity 1s ease';
+                
+                setTimeout(() => {
+                    heartIntro.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    setTimeout(() => {
+                        mainContent.style.opacity = '1';
+                        // Mobilde kaydırmayı aktif et
+                        document.body.style.overflowY = 'auto';
+                        document.body.style.position = 'relative';
+                    }, 100);
+                }, 1000);
+            }, 6000); // 6 saniye
+            
+            // Uçan kalpler oluştur
+            function createHearts() {
+                const heartCount = 15;
+                
+                for (let i = 0; i < heartCount; i++) {
+                    setTimeout(() => {
+                        const heart = document.createElement('div');
+                        heart.classList.add('heart');
+                        heart.innerHTML = '<i class="fas fa-heart"></i>';
+                        heart.style.left = Math.random() * 100 + 'vw';
+                        heart.style.animationDelay = Math.random() * 5 + 's';
+                        heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                        heart.style.color = getRandomColor();
+                        
+                        heartsContainer.appendChild(heart);
+                        
+                        // Kalbi temizle
+                        setTimeout(() => {
+                            if (heart.parentNode) {
+                                heart.parentNode.removeChild(heart);
+                            }
+                        }, 6000);
+                    }, i * 400);
+                }
+            }
+            
+            // Rastgele renk üret
+            function getRandomColor() {
+                const colors = ['#ff2a6d', '#ff6b9d', '#ff4d8d', '#ff1493', '#dc143c', '#ff0033'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            // Başlangıçta kalpler
+            createHearts();
+            setInterval(createHearts, 7000);
+            
+            // Evet butonuna tıklama
+            yesBtn.addEventListener('click', function() {
+                successMessage.classList.remove('hidden');
+                yesBtn.classList.add('hidden');
+                noBtn.classList.add('hidden');
+                
+                // Kutlama efekti
+                createConfetti();
+                
+                // Daha fazla kalp
+                setInterval(createHearts, 1000);
+            });
+            
+            // Hayır butonuna tıklama (kaçan buton ve evet büyütme)
+            noBtn.addEventListener('click', function() {
+                noClickCount++;
+                
+                // Evet butonunu büyüt
+                yesSize += 0.2;
+                yesBtn.style.transform = `scale(${yesSize})`;
+                
+                // 3. tıklamada hayır butonunu gizle
+                if (noClickCount >= 3) {
+                    noBtn.classList.add('hidden');
+                    // Evet butonunu ortala
+                    document.querySelector('.buttons').style.justifyContent = 'center';
+                } else {
+                    // Butonu hareket ettir
+                    moveButton();
+                }
+            });
+            
+            // Butonu hareket ettir
+            function moveButton() {
+                const container = document.querySelector('.container');
+                const containerRect = container.getBoundingClientRect();
+                const buttonRect = noBtn.getBoundingClientRect();
+                
+                const maxX = containerRect.width - buttonRect.width - 30;
+                const maxY = containerRect.height - buttonRect.height - 30;
+                
+                const randomX = Math.floor(Math.random() * maxX);
+                const randomY = Math.floor(Math.random() * maxY);
+                
+                noBtn.style.position = 'absolute';
+                noBtn.style.left = randomX + 'px';
+                noBtn.style.top = randomY + 'px';
+            }
+            
+            // Konfeti efekti
+            function createConfetti() {
+                const confettiCount = 200;
+                const colors = ['#ff2a6d', '#ff6b9d', '#ff4d8d', '#ff1493', '#dc143c', '#ff0033'];
+                
+                for (let i = 0; i < confettiCount; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.classList.add('confetti');
+                        confetti.style.left = Math.random() * 100 + 'vw';
+                        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                        confetti.style.width = (Math.random() * 12 + 6) + 'px';
+                        confetti.style.height = (Math.random() * 12 + 6) + 'px';
+                        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                        
+                        celebration.appendChild(confetti);
+                        
+                        // Animasyon
+                        const animation = confetti.animate([
+                            { transform: 'translateY(-20px) rotate(0deg)', opacity: 1 },
+                            { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                        ], {
+                            duration: Math.random() * 3000 + 2000,
+                            easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
+                        });
+                        
+                        // Kaldır
+                        animation.onfinish = () => {
+                            confetti.remove();
+                        };
+                    }, i * 15);
+                }
+            }
+
+            // Mobil kaydırma için ek düzenlemeler
+            function enableMobileScroll() {
+                document.body.style.overflowY = 'auto';
+                document.body.style.position = 'relative';
+                document.documentElement.style.overflowY = 'auto';
+            }
+
+            // Sayfa yüklendiğinde mobil kaydırmayı aktif et
+            setTimeout(enableMobileScroll, 7000);
+        });
+    </script>
+</body>
+</html>
